@@ -3,12 +3,16 @@ import time
 from pyquery import PyQuery as pq
 import re
 from urllib.parse import urlencode
-import csv
 
 base_url="https://movie.douban.com/subject/30163509/comments?"
 
+user_agent = r'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.94 Safari/537.36 Firefox/23.0'
 headers={
-    'Cookie':'**************************',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Accept-Language': 'zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Connection': 'keep-alive',
+    'User-Agnet': user_agent
 }
 
 def save_to_csv(list,type,page):
