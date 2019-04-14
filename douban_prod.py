@@ -9,33 +9,33 @@ from http import cookiejar
 base_url="https://movie.douban.com/subject/30163509/comments?"
 
 
-# headers_movie={
-#     'Connection': 'keep-alive',
-#     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-#     'Accept-Encoding': 'gzip, deflate, br',
-#     'Accept-Language': 'zh-CN,zh;q=0.9',
-#     'Host': 'movie.douban.com',
-#     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.92 Safari/537.36',
-#     'Content-Type': 'application/x-www-form-urlencoded',
-#     'Upgrade-Insecure-Requests:': '1',
-# }
-#
-# headers_login_start = {
-#     'Referer': 'https://accounts.douban.com/passport/login',
-#     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.92 Safari/537.36'
-# }
-# headers_login_click={
-#     'Referer': 'https://accounts.douban.com/passport/login',
-#     'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.92 Safari/537.36'
-# }
-# headers_login_basic={
-#     'Accept': 'application/json',
-#     'Content-Type': 'application/x-www-form-urlencoded',
-#     'Origin': 'https://accounts.douban.com',
-#     'Referer': 'https://accounts.douban.com/passport/login',
-#     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.92 Safari/537.36',
-#     'X-Requested-With': 'XMLHttpRequest',
-# }
+headers_movie={
+    'Connection': 'keep-alive',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Accept-Language': 'zh-CN,zh;q=0.9',
+    'Host': 'movie.douban.com',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.92 Safari/537.36',
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Upgrade-Insecure-Requests:': '1',
+}
+
+headers_login_start = {
+    'Referer': 'https://accounts.douban.com/passport/login',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.92 Safari/537.36'
+}
+headers_login_click={
+    'Referer': 'https://accounts.douban.com/passport/login',
+    'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.92 Safari/537.36'
+}
+headers_login_basic={
+    'Accept': 'application/json',
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Origin': 'https://accounts.douban.com',
+    'Referer': 'https://accounts.douban.com/passport/login',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.92 Safari/537.36',
+    'X-Requested-With': 'XMLHttpRequest',
+}
 headers = {
     'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
     'Referer':'https://accounts.douban.com/login?alias=&redir=https%3A%2F%2Fwww.douban.com%2F&source=index_nav&error=1001'
@@ -95,13 +95,15 @@ def main():
     print(parse_comment(index_html))
     total_num=parse_comment(index_html)
     pagenum=int(total_num)/20+1
+    comment_list=[]
+    score_list=[]
     for page in range(1, int(pagenum)):
-        #10页登陆
-        if page%10==0:
-            douban_login()
-        print(session.cookies.items())
-        comment_list=[]
-        score_list=[]
+        fail_count=0
+        # #30页登陆
+        # if page%30==0:
+        #     douban_login()
+        # print(session.cookies.items())
+
         print('page= '+str(page))
         page_html=get_page_html(page)
         if page_html:
@@ -117,14 +119,32 @@ def main():
             for content in contents:
                 content_deal = content.text()
                 print(content_deal)
+                if( not str([content_deal]).strip()):
+                    doc = pq(page_html)
+                    #打印当前错误网页源码，以应对反爬
+                    print(doc)
+                    print("当前页为："+page)
+                    print("当前时间为："+datetime.datetime.now().strftime("%Y-%m-%d-%H_%M_%S"))
+                    fail_count=fail_count+1
+                    print("当前失败次数为："+fail_count)
+                    douban_login()
+                    if(fail_count>50):
+                        save_to_csv(comment_list,'content',page)
+                        save_to_csv(score_list,'score',page)
+                        exit(1)
+
                 comment_list = comment_list + [content_deal]
-        save_to_csv(comment_list,'content',page)
-        save_to_csv(score_list,'score',page)
+        if page%100==0:
+            save_to_csv(comment_list,'content',page)
+            save_to_csv(score_list,'score',page)
+            comment_list=[]
+            score_list=[]
 
 
 def douban_login():
     username = '13031623728'
     password = 'abc123456'
+    #7Lew
     data = {                    #需要传去的数据
         'ck':'B0hi',
         'name':username,
@@ -132,8 +152,8 @@ def douban_login():
         'remember':'false',
         'ticket':''
     }
-    # login_start_url='https://www.douban.com/stat.html'
-    # login_click_url='https://www.douban.com/stat.html'
+    login_start_url='https://www.douban.com/stat.html'
+    login_click_url='https://www.douban.com/stat.html'
     login_basic_url='https://accounts.douban.com/j/mobile/login/basic'
 
     html = session.post(login_basic_url,data=data,headers=headers)
