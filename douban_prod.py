@@ -97,8 +97,10 @@ def main():
     pagenum=int(total_num)/20+1
     comment_list=[]
     score_list=[]
+    fail_count=0
+    global fail_flag
     for page in range(1, int(pagenum)):
-        fail_count=0
+        fail_flag=0
         # #30页登陆
         # if page%30==0:
         #     douban_login()
@@ -119,21 +121,28 @@ def main():
             for content in contents:
                 content_deal = content.text()
                 print(content_deal)
+                #打印空
                 if( not str([content_deal]).strip()):
-                    doc = pq(page_html)
+                    fail_flag=1
+                comment_list = comment_list + [content_deal]
+            if(fail_flag==1):
+                doc = pq(page_html)
+                print("当前页为："+page)
+                print("当前时间为："+datetime.datetime.now().strftime("%Y-%m-%d-%H_%M_%S"))
+                fail_count=fail_count+1
+                print("当前失败次数为："+fail_count)
+                //重新登陆尝试
+                print("正在尝试重新登陆。。。。。")
+                douban_login()
+                fail_flag=0
+                if(fail_count>50):
+                    print("失败次数已超过制定次数，保存文件退出")
                     #打印当前错误网页源码，以应对反爬
                     print(doc)
-                    print("当前页为："+page)
-                    print("当前时间为："+datetime.datetime.now().strftime("%Y-%m-%d-%H_%M_%S"))
-                    fail_count=fail_count+1
-                    print("当前失败次数为："+fail_count)
-                    douban_login()
-                    if(fail_count>50):
-                        save_to_csv(comment_list,'content',page)
-                        save_to_csv(score_list,'score',page)
-                        exit(1)
-
-                comment_list = comment_list + [content_deal]
+                    save_to_csv(comment_list,'content',page)
+                    save_to_csv(score_list,'score',page)
+                    exit(1)
+        #100页存一个文件
         if page%100==0:
             save_to_csv(comment_list,'content',page)
             save_to_csv(score_list,'score',page)
