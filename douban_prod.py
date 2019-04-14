@@ -3,6 +3,7 @@ import time
 from pyquery import PyQuery as pq
 import re
 from urllib.parse import urlencode
+import datetime
 
 base_url="https://movie.douban.com/subject/30163509/comments?"
 
@@ -16,7 +17,8 @@ headers={
 }
 
 def save_to_csv(list,type,page):
-    str_param = type+'_'+str(page)
+    nowtime = datetime.datetime.now().strftime("%Y-%m-%d-%H_%M_%S") #获取当前时间
+    str_param = type+'_'+str(page)+'_'+nowtime
     with open("F:/scrapyData/fcrs_%s.txt"%(str_param), "w",newline='',encoding='utf-8') as f:
         for info in list:
             #print(info)
@@ -39,6 +41,7 @@ def get_page_html(page):
     }
     queries=urlencode(data)
     url=base_url+queries
+    print("当前位置：",queries)
     html=get_html(url)
     return html
 
@@ -63,7 +66,7 @@ def main():
     total_num=parse_comment(index_html)
     pagenum=int(total_num)/20+1
     #for page in range(1, int(pagenum)):
-    for page in range(1, 150):
+    for page in range(1, 6):
         comment_list=[]
         score_list=[]
         print('page= '+str(page))
