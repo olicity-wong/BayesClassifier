@@ -42,9 +42,12 @@ headers = {
 
 }
 
-global session
-session=requests.Session()
-session.headers.update(headers)
+def get_session():
+    global session
+    session=requests.Session()
+    session.close()
+    session=requests.Session()
+    session.headers.update(headers)
 
 def save_to_csv(list,type,page):
     nowtime = datetime.datetime.now().strftime("%Y-%m-%d-%H_%M_%S") #获取当前时间
@@ -104,7 +107,7 @@ def main():
         # #30页登陆
         # if page%30==0:
         #     douban_login()
-        # print(session.cookies.items())
+        print(session.cookies.items())
 
         print('page= '+str(page))
         page_html=get_page_html(page)
@@ -131,7 +134,7 @@ def main():
                 print("当前时间为："+datetime.datetime.now().strftime("%Y-%m-%d-%H_%M_%S"))
                 fail_count=fail_count+1
                 print("当前失败次数为："+fail_count)
-                //重新登陆尝试
+                #重新登陆尝试
                 print("正在尝试重新登陆。。。。。")
                 douban_login()
                 fail_flag=0
@@ -151,6 +154,7 @@ def main():
 
 
 def douban_login():
+    get_session()
     username = '13031623728'
     password = 'abc123456'
     #7Lew
