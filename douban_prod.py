@@ -33,22 +33,23 @@ def save_to_file(list, type, page, movie_name, content_type):
     # 文件名添加时间，已区分，防止覆盖
     nowtime = datetime.datetime.now().strftime("%Y-%m-%d-%H_%M_%S")  # 获取当前时间
     str_param = type + '_abc123_' + str(page) + '_' + nowtime
-    #创建该电影目录
-    dir_path=f_scrapy_path+movie_name
-    if(os.path.exists(dir_path)):
-        #shutil.rmtree(dir_path)
+    # 创建该电影目录
+    dir_path = f_scrapy_path + movie_name
+    if (os.path.exists(dir_path)):
+        # shutil.rmtree(dir_path)
         print('exists')
     else:
         os.mkdir(dir_path)
     if (content_type.strip() in ['h', 'm', 'l']):
-        file_name = dir_path+'/'+ movie_name + "_" + content_type + "_%s.txt" % (str_param)
+        file_name = dir_path + '/' + movie_name + "_" + content_type + "_%s.txt" % (str_param)
     else:
-        file_name = dir_path+'/' + movie_name + "_%s.txt" % (str_param)
+        file_name = dir_path + '/' + movie_name + "_%s.txt" % (str_param)
     with open(file_name, "w", newline='', encoding='utf-8') as f:
         for info in list:
             # print(info)
             f.writelines([info])
             print(file=f)
+
 
 # 获取评论与分数
 def parse_content(html):
@@ -112,8 +113,8 @@ def main(movie_name, movie_id, content_type):
     # 标记是否失败过
     global fail_flag
 
-    # 只爬取前60页
-    for page in range(1, int(2)):
+    # 只爬取前25页
+    for page in range(1, int(26)):
         fail_flag = 0
         # #30页登陆
         # if page%30==0:
@@ -187,21 +188,26 @@ if __name__ == "__main__":
     # 神奇动物：格林德沃之罪：26147417
     # 地球最后的夜晚：26633257
     # 西虹市首富：27605698
-    # &percent_type=h/m/l
+    # 邪不压正：26366496
 
     movie_name = input("电影名：")
 
     movie_id = input("电影id：")
-
-    # &percent_type=h/m/l
-    content_type = input("爬取评论类型：")
 
     # username = '13031623728'
     # password = 'abc123456'
     username = input("用户名：")
     password = input("密码：")
 
-    # 模拟登陆
-    douban_login(username, password)
+    # percent_type=h/m/l/all
+    content_type = input("爬取评论类型：")
+    # 全部类型
+    content_type_list = ['aaa', 'l', 'm', 'h']
+    if (content_type == 'all'):
+        for i in (range(4)):
+            param_type = content_type_list[i]
 
-    main(movie_name, movie_id, content_type)
+            # 模拟登陆
+            douban_login(username, password)
+
+            main(movie_name, movie_id, param_type)
