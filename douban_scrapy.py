@@ -101,7 +101,7 @@ def get_html(url):
 
 
 # 爬虫主体
-def main(movie_name, movie_id, content_type):
+def main(movie_name, movie_id, content_type, page_num):
     print("start=======================")
 
     # 评论list
@@ -114,11 +114,9 @@ def main(movie_name, movie_id, content_type):
     global fail_flag
 
     # 只爬取前25页
-    for page in range(1, int(26)):
+    for page in range(1, int(page_num)):
         fail_flag = 0
-        # #30页登陆
-        # if page%30==0:
-        #     douban_login()
+
         print(session.cookies.items())
 
         print('page= ' + str(page))
@@ -157,12 +155,7 @@ def main(movie_name, movie_id, content_type):
                     save_to_file(comment_list, 'content', page, content_type)
                     save_to_file(score_list, 'score', page, content_type)
                     exit(1)
-        ##100页存一个文件
-        # if page%26==0:
-        #    save_to_file(comment_list,'content',page)
-        #    save_to_file(score_list,'score',page)
-        #    comment_list=[]
-        #    score_list=[]
+
     save_to_file(comment_list, 'content', page, movie_name, content_type)
     save_to_file(score_list, 'score', page, movie_name, content_type)
 
@@ -201,6 +194,10 @@ if __name__ == "__main__":
 
     # percent_type=h/m/l/all
     content_type = input("爬取评论类型：")
+
+    # 最大页数25，输26
+    page_num = input("爬取评论页数：")
+
     # 全部类型
     content_type_list = ['aaa', 'l', 'm', 'h']
     if (content_type == 'all'):
@@ -210,8 +207,8 @@ if __name__ == "__main__":
             # 模拟登陆
             douban_login(username, password)
 
-            main(movie_name, movie_id, param_type)
+            main(movie_name, movie_id, param_type, page_num)
     else:
         douban_login(username, password)
 
-        main(movie_name, movie_id, content_type)
+        main(movie_name, movie_id, content_type, page_num)
