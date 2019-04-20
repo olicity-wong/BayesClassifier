@@ -123,5 +123,11 @@ if __name__ == '__main__':
     movie_name = input("电影名：")
     # positive/negative/neutral
     content_type = input("评价类型：")
-    # tf_idf_cut(movie_name)
-    word_cut(movie_name, content_type)
+    # 全部类型
+    content_type_list = ['positive', 'negative', 'neutral']
+    if (content_type == 'all'):
+        for i in (range(3)):
+            param_type = content_type_list[i]
+
+            # tf_idf_cut(movie_name)
+            word_cut(movie_name, param_type)
