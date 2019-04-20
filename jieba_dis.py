@@ -131,3 +131,5 @@ if __name__ == '__main__':
 
             # tf_idf_cut(movie_name)
             word_cut(movie_name, param_type)
+    else:
+        word_cut(movie_name, content_type)

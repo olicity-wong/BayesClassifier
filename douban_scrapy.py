@@ -211,3 +211,7 @@ if __name__ == "__main__":
             douban_login(username, password)
 
             main(movie_name, movie_id, param_type)
+    else:
+        douban_login(username, password)
+
+        main(movie_name, movie_id, content_type)
