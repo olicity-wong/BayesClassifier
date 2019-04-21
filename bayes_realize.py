@@ -5,6 +5,32 @@ import codecs
 import jieba
 from numpy import *
 import numpy as np
+import re
+from string import digits
+
+
+
+f_root_path = 'F:/data/'
+f_scrapy_path = f_root_path + 'scrapy_data/'
+f_content_path = f_root_path + 'content_data/'
+f_strpwords_path = f_root_path + 'aux_data/stop_words.txt'
+f_words_path = f_root_path + 'words_data/'
+f_words_cut_file=f_words_path+'word_cut_all/'
+f_common_path=f_words_cut_file+'xbyz_words_common.txt'
+# 创建停用词列表
+def stopwordslist(filepath):
+    stopwords = [line.strip() for line in open(filepath, 'r', encoding='utf-8').readlines()]
+    return stopwords
+
+def commonwordslist(filepath):
+    commonwords = [line.strip() for line in open(filepath, 'r', encoding='utf-8').readlines()]
+    return commonwords
+
+# 去除停用词
+stopwords = stopwordslist(f_strpwords_path)
+
+# 公共词
+commonwords = commonwordslist(f_common_path)
 
 #按行存储到列表
 f = codecs.open("F:\\github\\MyAll\\xbyz_1500.txt",'r',encoding='utf-8')
@@ -39,13 +65,40 @@ splitpositive = []
 splitnegative = []
 splitneutral = []
 
+
+
 #分词
 for line in classpositive:
-    temp1.append(jieba.cut(line))
+    # 去除标点符号
+    sentence = re.sub(r'[^\w\s]', '', line)
+
+    # 去除数字
+    remove_digits = str.maketrans('', '', digits)
+    sentence = sentence.translate(remove_digits)
+
+
+    words = jieba.cut(sentence, cut_all=True, HMM=True)
+    temp1.append(words)
 for line in classneutral:
-    temp2.append(jieba.cut(line))
+    # 去除标点符号
+    sentence = re.sub(r'[^\w\s]', '', line)
+
+    # 去除数字
+    remove_digits = str.maketrans('', '', digits)
+    sentence = sentence.translate(remove_digits)
+
+    words = jieba.cut(sentence, cut_all=True, HMM=True)
+    temp2.append(words)
 for line in classnegative:
-    temp3.append(jieba.cut(line))
+    # 去除标点符号
+    sentence = re.sub(r'[^\w\s]', '', line)
+
+    # 去除数字
+    remove_digits = str.maketrans('', '', digits)
+    sentence = sentence.translate(remove_digits)
+
+    words = jieba.cut(sentence, cut_all=True, HMM=True)
+    temp3.append(words)
 #########################################################
 #每行的分词放入列表中
 i1 = 0
@@ -54,20 +107,32 @@ i3 = 0
 for line in temp1:
     splitpositive.append([])
     for seg in line:
-        if seg != '\r\n':
+        if seg != '\r\n' and seg not in stopwords and seg not in commonwords:
             splitpositive[i1].append(seg)
+    if len(splitpositive[i1]):
+        print('not null')
+    else:
+        splitpositive[i1].append('positive')
     i1 += 1
 for line in temp2:
     splitneutral.append([])
     for seg in line:
-        if seg != '\r\n':
+        if seg != '\r\n' and seg not in stopwords and seg not in commonwords:
             splitneutral[i2].append(seg)
+    if len(splitneutral[i2]):
+        print('not null')
+    else:
+        splitneutral[i2].append('neutral')
     i2 += 1
 for line in temp3:
     splitnegative.append([])
-    for seg in line:
-        if seg != '\r\n':
+    for seg in line :
+        if seg != '\r\n' and seg not in stopwords and seg not in commonwords:
             splitnegative[i3].append(seg)
+    if len(splitnegative[i3]):
+        print('not null')
+    else:
+        splitnegative[i3].append('negative')
     i3 += 1
 
 splitdata = splitpositive + splitnegative +splitneutral
@@ -114,11 +179,35 @@ splitneutral1 = []
 
 
 for line in classpositive1:
-    temp11.append(jieba.cut(line))
+    # 去除标点符号
+    sentence = re.sub(r'[^\w\s]', '', line)
+
+    # 去除数字
+    remove_digits = str.maketrans('', '', digits)
+    sentence = sentence.translate(remove_digits)
+
+    words = jieba.cut(sentence, cut_all=True, HMM=True)
+    temp11.append(words)
 for line in classneutral1:
-    temp21.append(jieba.cut(line))
+    # 去除标点符号
+    sentence = re.sub(r'[^\w\s]', '', line)
+
+    # 去除数字
+    remove_digits = str.maketrans('', '', digits)
+    sentence = sentence.translate(remove_digits)
+
+    words = jieba.cut(sentence, cut_all=True, HMM=True)
+    temp21.append(words)
 for line in classnegative1:
-    temp31.append(jieba.cut(line))
+    # 去除标点符号
+    sentence = re.sub(r'[^\w\s]', '', line)
+
+    # 去除数字
+    remove_digits = str.maketrans('', '', digits)
+    sentence = sentence.translate(remove_digits)
+
+    words = jieba.cut(sentence, cut_all=True, HMM=True)
+    temp31.append(words)
 
 i1 = 0
 i2 = 0
@@ -126,20 +215,32 @@ i3 = 0
 for line in temp11:
     splitpositive1.append([])
     for seg in line:
-        if seg != '\r\n':
+        if seg != '\r\n' and seg not in stopwords and seg not in commonwords:
             splitpositive1[i1].append(seg)
+    if len(splitpositive1[i1]):
+        print('not null')
+    else:
+        splitpositive1[i1].append('positive')
     i1 += 1
 for line in temp21:
     splitneutral1.append([])
     for seg in line:
-        if seg != '\r\n':
+        if seg != '\r\n' and seg not in stopwords and seg not in commonwords:
             splitneutral1[i2].append(seg)
+    if len(splitneutral1[i2]):
+        print('not null')
+    else:
+        splitneutral1[i2].append('neutral')
     i2 += 1
 for line in temp31:
     splitnegative1.append([])
     for seg in line:
-        if seg != '\r\n':
+        if seg != '\r\n' and seg not in stopwords and seg not in commonwords:
             splitnegative1[i3].append(seg)
+    if len(splitnegative1[i3]):
+        print('not null')
+    else:
+        splitnegative1[i3].append('negative')
     i3 += 1
 
 splitdata1 = splitpositive1 + splitnegative1 +splitneutral1
@@ -223,7 +324,7 @@ nb.train_set(splitdata,listclass)
 for i in range(len(splitdata1)):
     nb.map2vocab(splitdata1[i])
     newlistclass.append(nb.predict(nb.testset))
-    print('listclass1[i]:'+str(listclass1[i]))
+    #print('listclass1[i]:'+str(listclass1[i]))
     value = str(listclass1[i])
     nbpredict=nb.predict(nb.testset)
     print('bayes_cal:%s'%(nbpredict),'------actual_value:%s'%(value))
