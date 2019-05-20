@@ -144,6 +144,7 @@ for line in splitnegative:
 for line in splitneutral:
     listclass.append(0)
 print(splitdata)
+print(listclass)
 ######################################################################################
 f = codecs.open("F:\\github\\MyAll\\xbyz_500.txt",'r',encoding='utf-8')
 data1 = f.readlines()
@@ -260,7 +261,7 @@ class NBayes(object):
         self.tf = 0             #训练集的权值矩阵
         self.tdm = 0            #p(x|yi)
         self.Pcates = {}        #p(yi)类别词典
-        self.labels = []        #对应每个文本的分类
+        self.labels = []        #对应每个分类的文本
         self.doclength = 0      #训练集文本数
         self.vocablen = 0       #词典词长
         self.testset = 0        #测试集
@@ -289,14 +290,15 @@ class NBayes(object):
                 self.tf[indx,self.vocabulary.index(word)] += 1
             for singleworld in set(trainset[indx]):
                 self.idf[0,self.vocabulary.index(singleworld)] += 1
+        self.idf = np.log10(self.doclength/self.idf+1)
 
     def build_tdm(self):
         self.tdm = np.zeros([len(self.Pcates),self.vocablen])   #类别行*词典列
-        sumlist = np.zeros([len(self.Pcates),1])                #统计每个分类的总值
-        for indx in range(self.doclength):                      #将同一类别的词向量空间值加总
-            self.tdm[self.labels[indx]] += self.tf[indx]        #统计每个分类的总值
-            sumlist[self.labels[indx]] = np.sum(self.tdm[self.labels[indx]])
-        self.tdm = self.tdm/sumlist
+        sumlist = np.zeros([len(self.Pcates),1])
+        for indx in range(self.doclength):
+            self.tdm[self.labels[indx]] += self.tf[indx]      #统计每个分类的总值
+            sumlist[self.labels[indx]] = np.sum(self.tdm[self.labels[indx]])    #将同一类别的词向量空间值加总
+        self.tdm = (self.tdm/sumlist)*self.idf
 
     def map2vocab(self,testdata):
         self.testset = np.zeros([1,self.vocablen])
