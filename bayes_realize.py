@@ -249,13 +249,17 @@ print(test_all_class_list)
 class NBayes(object):
     def __init__(self):
         self.vocabulary = []  # 词典
+        self.vocabularylist = []
         self.idf = 0
         self.tf = 0  # 训练集的权值矩阵
+        self.tt = 0
+        self.tfidf = 0
         self.tdm = 0  # p(x|yi)
         self.pcates = {}  # p(yi)类别词典
         self.labels = []  # 对应每个分类的文本
         self.doclength = 0  # 训练集文本数
         self.vocablen = 0  # 词典词长
+        self.vacabnum = 0 # 词典所有词数量
         self.testset = 0  # 测试集
 
     def train_set(self, trainset, classvec):
@@ -263,6 +267,10 @@ class NBayes(object):
         self.doclength = len(trainset)
         tempset = set()
         [tempset.add(word) for doc in trainset for word in doc]
+        temp_list = list()
+        [temp_list.append(word) for doc in trainset for word in doc]
+        self.vocabularylist = temp_list
+        self.vacabnum = len(temp_list)
         self.vocabulary = list(tempset)
         self.vocablen = len(self.vocabulary)
         self.calc_wordfreq(trainset)  # 计算词频数据集
@@ -276,21 +284,29 @@ class NBayes(object):
 
     def calc_wordfreq(self, trainset):
         self.idf = np.zeros([1, self.vocablen])
-        self.tf = np.zeros([self.doclength, self.vocablen])
+        self.tf = np.zeros([1, self.vocablen])
+        self.tt = np.zeros([self.doclength, self.vocablen])
+        tf_tmp = np.zeros([1, self.vocablen])
         for indx in range(self.doclength):
             for word in trainset[indx]:
-                self.tf[indx, self.vocabulary.index(word)] += 1
+                tf_tmp[0, self.vocabulary.index(word)] += 1     #统计词频
+            for word in trainset[indx]:
+                self.tt[indx, self.vocabulary.index(word)] += 1     # 这句话的这个词++
             for singleworld in set(trainset[indx]):
-                self.idf[0, self.vocabulary.index(singleworld)] += 1
-        self.idf = np.log10(self.doclength / self.idf + 1)
+                self.idf[0, self.vocabulary.index(singleworld)] += 1    # 这个词有这句话++
+        self.tf = tf_tmp/self.vacabnum
+        self.idf = np.log(self.doclength / self.idf + 1)
+        self.tfidf = self.tf*self.idf*10000
+        # self.tt = self.tt * self.tfidf
+
 
     def build_tdm(self):
         self.tdm = np.zeros([len(self.pcates), self.vocablen])  # 类别行*词典列
         sumlist = np.zeros([len(self.pcates), 1])
         for indx in range(self.doclength):
-            self.tdm[self.labels[indx]] += self.tf[indx]  # 将同一类别的词向量空间值加总
+            self.tdm[self.labels[indx]] += self.tt[indx]  # 将同一类别的词向量空间值加总
             sumlist[self.labels[indx]] = np.sum(self.tdm[self.labels[indx]])  # 统计每个分类的总值
-        self.tdm = (self.tdm / sumlist) * self.idf
+        self.tdm = self.tdm / sumlist
 
     def map2vocab(self, testdata):
         self.testset = np.zeros([1, self.vocablen])
@@ -305,7 +321,7 @@ class NBayes(object):
         predvalue = 0
         predclass = ''
         for tdm_vect, keyclass in zip(self.tdm, self.pcates):
-            temp = np.sum(testset * tdm_vect * self.pcates[keyclass])
+            temp = np.sum(testset * self.tfidf[0] * tdm_vect * self.pcates[keyclass])
             if temp > predvalue:
                 predvalue = temp
                 predclass = keyclass
