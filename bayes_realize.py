@@ -296,8 +296,8 @@ class NBayes(object):
         self.tdm = np.zeros([len(self.Pcates),self.vocablen])   #类别行*词典列
         sumlist = np.zeros([len(self.Pcates),1])
         for indx in range(self.doclength):
-            self.tdm[self.labels[indx]] += self.tf[indx]      #统计每个分类的总值
-            sumlist[self.labels[indx]] = np.sum(self.tdm[self.labels[indx]])    #将同一类别的词向量空间值加总
+            self.tdm[self.labels[indx]] += self.tf[indx]      #将同一类别的词向量空间值加总
+            sumlist[self.labels[indx]] = np.sum(self.tdm[self.labels[indx]])    #统计每个分类的总值
         self.tdm = (self.tdm/sumlist)*self.idf
 
     def map2vocab(self,testdata):
