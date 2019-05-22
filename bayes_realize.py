@@ -208,6 +208,6 @@ if __name__ == "__main__":
     # print (listclass)
     print(pre_class_list)
 
-    print('match_rate:', count / len(test_all_word_cut))
-    print('match_current_rate:', count / un_null_count)
+    print('correct_rate:', count / len(test_all_word_cut))
+    print('match_correct_rate:', count / un_null_count)
     print('no_match_rate:', null_count / len(test_all_word_cut))
