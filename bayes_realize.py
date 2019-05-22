@@ -33,7 +33,7 @@ stop_words = stop_words_list(f_stop_words_path)
 common_words = common_words_list(f_common_path)
 
 # 按行存储到列表
-f = codecs.open("C:\\Users\\91460\\Desktop\\论文相关\\hapi\\MyAll\\xbyz_1500.txt", 'r', encoding='utf-8')
+f = codecs.open("C:\\Users\\91460\\Desktop\\论文相关\\hapi\\MyAll\\f_4.txt", 'r', encoding='utf-8')
 data = f.readlines()
 train_data = []
 for line in data:
@@ -45,14 +45,13 @@ train_neutral_class_list = []
 
 # 根据数值判断情感分类
 for line in train_data:
-    if line[0] in ['4', '5']:
+    if line[0] in ['1']:
         train_positive_class_list.append(line[1:])
-    if line[0] in ['3']:
-        train_neutral_class_list.append(line[1:])
-    if line[0] in ['1', '2']:
-        train_negative_class_list.append(line[1:])
     if line[0] in ['0']:
-        continue
+        train_neutral_class_list.append(line[1:])
+    if line[0] in ['-']:
+        train_negative_class_list.append(line[1:])
+
 
 # 分词
 train_positive_word_cut_temp = []
@@ -141,7 +140,7 @@ for line in train_neutral_word_cut:
 print(train_all_word_cut)
 print(train_all_class_list)
 
-f = codecs.open("C:\\Users\\91460\\Desktop\\论文相关\\hapi\\MyAll\\xbyz_500.txt", 'r', encoding='utf-8')
+f = codecs.open("C:\\Users\\91460\\Desktop\\论文相关\\hapi\\MyAll\\f_1.txt", 'r', encoding='utf-8')
 data1 = f.readlines()
 test_data = []
 for line in data1:
@@ -157,14 +156,13 @@ test_neutral_word_cut_temp = []
 test_negative_word_cut_temp = []
 
 for line in test_data:
-    if line[0] in ['4', '5']:
+    if line[0] in ['1']:
         test_positive_class_list.append(line[1:])
-    if line[0] in ['3']:
-        test_neutral_class_list.append(line[1:])
-    if line[0] in ['1', '2']:
-        test_negative_class_list.append(line[1:])
     if line[0] in ['0']:
-        continue
+        test_neutral_class_list.append(line[1:])
+    if line[0] in ['-']:
+        test_negative_class_list.append(line[1:])
+
 
 test_positive_word_cut = []
 test_neutral_word_cut = []
@@ -276,6 +274,7 @@ class NBayes(object):
         self.calc_wordfreq(trainset)  # 计算词频数据集
         self.build_tdm()  # 按分类累计向量空间的每维值p(x|yi)
 
+    # 采用极大似然估计计算p(y)
     def cate_prob(self, classvec):
         self.labels = classvec
         labeltemps = set(self.labels)
@@ -284,27 +283,23 @@ class NBayes(object):
 
     def calc_wordfreq(self, trainset):
         self.idf = np.zeros([1, self.vocablen])
-        self.tf = np.zeros([1, self.vocablen])
-        self.tt = np.zeros([self.doclength, self.vocablen])
-        tf_tmp = np.zeros([1, self.vocablen])
+        tftemp = np.zeros([1, self.vocablen])
+        self.tf = np.zeros([self.doclength, self.vocablen])
         for indx in range(self.doclength):
             for word in trainset[indx]:
-                tf_tmp[0, self.vocabulary.index(word)] += 1     #统计词频
-            for word in trainset[indx]:
-                self.tt[indx, self.vocabulary.index(word)] += 1     # 这句话的这个词++/词袋模型
+                tftemp[0, self.vocabulary.index(word)] += 1     # 这句话的这个词++/词袋模型
+            self.tf[indx] = tftemp/len(trainset[indx])
             for singleworld in set(trainset[indx]):
                 self.idf[0, self.vocabulary.index(singleworld)] += 1    # 这个词有这句话++
-        self.tf = tf_tmp/self.vacabnum
         self.idf = np.log(self.doclength / self.idf + 1)
-        self.tfidf = self.tf*self.idf*10000
-        # self.tt = self.tt * self.tfidf
+        self.tfidf = np.multiply(self.tf,self.idf)
 
-
+    # 计算条件概率 p(x|y_i)
     def build_tdm(self):
         self.tdm = np.zeros([len(self.pcates), self.vocablen])  # 类别行*词典列
         sumlist = np.zeros([len(self.pcates), 1])
         for indx in range(self.doclength):
-            self.tdm[self.labels[indx]] += self.tt[indx]  # 将同一类别的词向量空间值加总
+            self.tdm[self.labels[indx]] += self.tfidf[indx]  # 将同一类别的词向量空间值加总
             sumlist[self.labels[indx]] = np.sum(self.tdm[self.labels[indx]])  # 统计每个分类的总值
         self.tdm = self.tdm / sumlist
 
@@ -321,7 +316,7 @@ class NBayes(object):
         predvalue = 0
         predclass = ''
         for tdm_vect, keyclass in zip(self.tdm, self.pcates):
-            temp = np.sum(testset * self.tfidf[0] * tdm_vect * self.pcates[keyclass])
+            temp = np.sum(testset * tdm_vect * self.pcates[keyclass])
             if temp > predvalue:
                 predvalue = temp
                 predclass = keyclass
