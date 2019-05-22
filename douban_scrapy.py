@@ -11,7 +11,7 @@ import datetime
 import shutil
 
 # 定义文件目录
-f_root_path = 'C:/data/'
+f_root_path = 'F:\github\MyAll\data'
 f_scrapy_path = f_root_path + 'scrapy_data/'
 f_content_path = f_root_path + 'content_data/'
 f_strpwords_path = f_root_path + 'aux_data/stop_words.txt'
@@ -22,7 +22,6 @@ base_url = "https://movie.douban.com/subject/"
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
     'Referer': 'https://accounts.douban.com/login?alias=&redir=https%3A%2F%2Fwww.douban.com%2F&source=index_nav&error=1001'
-
 }
 session = requests.Session()
 session.headers.update(headers)

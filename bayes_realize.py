@@ -6,7 +6,7 @@ import numpy as np
 import re
 from string import digits
 
-f_root_path = 'F:/data/'
+f_root_path = 'F:\github\MyAll\data'
 f_scrapy_path = f_root_path + 'scrapy_data/'
 f_content_path = f_root_path + 'content_data/'
 f_stop_words_path = f_root_path + 'aux_data/stop_words.txt'

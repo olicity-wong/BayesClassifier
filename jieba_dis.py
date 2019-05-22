@@ -4,7 +4,7 @@ import re
 from string import digits
 
 # 定义文件目录
-f_root_path = 'C:/data/'
+f_root_path = 'F:\github\MyAll\data'
 f_scrapy_path = f_root_path + 'scrapy_data/'
 f_content_path = f_root_path + 'content_data/'
 f_strpwords_path = f_root_path + 'aux_data/stop_words.txt'
@@ -93,7 +93,8 @@ def word_cut(movie_name, content_type):
 
     # 存入字典计数
     words_dict = {}
-    words = jieba.cut(sentence, cut_all=True)
+    # 使用全模式，HMM模型
+    words = jieba.cut(sentence, cut_all=True, HMM=True)
     for word in words:
         # 去除停用词
         if word not in stopwords:

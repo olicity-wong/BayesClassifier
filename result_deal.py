@@ -3,7 +3,7 @@ import os
 '''
 输入文件名，自动将爬取的文件结果进行整合
 '''
-f_root_path = 'C:/data/'
+f_root_path = 'F:\github\MyAll\data'
 f_scrapy_path = f_root_path + 'scrapy_data/'
 f_content_path = f_root_path + 'content_data/'
 f_strpwords_path = f_root_path + 'aux_data/stop_words.txt'
@@ -15,15 +15,15 @@ def rename_file(rename_file_path):
     movie_name = os.listdir(rename_file_path)
     for temp in movie_name:
         num = temp.find('_abc123_')
-        if(num>=0):
+        if (num >= 0):
             new_name = temp[:num]
             print(new_name)
-            os.rename(rename_file_path+'/' + temp, rename_file_path+'/' + new_name)
+            os.rename(rename_file_path + '/' + temp, rename_file_path + '/' + new_name)
 
 
 # 获取行数
 def file_len(fname):
-    with open(fname,"r",  encoding='utf-8') as f:
+    with open(fname, "r", encoding='utf-8') as f:
         for i, l in enumerate(f):
             pass
     return i + 1
@@ -50,7 +50,7 @@ def result_concat(movie_name, content_type):
     # 输入路径
     f_star_name = f_scrapy_path + movie_name + '/' + f_movie_name + '_score'
     f_content_name = f_scrapy_path + movie_name + '/' + f_movie_name + '_content'
-    if(os.path.exists(f_star_name) and os.path.exists(f_content_name)):
+    if (os.path.exists(f_star_name) and os.path.exists(f_content_name)):
         f_star_read = open(f_star_name, 'r', encoding='UTF-8')
         f_content_read = open(f_content_name, 'r', encoding='UTF-8')
         list_star = f_star_read.readlines()
