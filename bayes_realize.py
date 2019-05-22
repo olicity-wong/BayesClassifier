@@ -6,7 +6,7 @@ import numpy as np
 import re
 from string import digits
 
-f_root_path = 'F:/data/'
+f_root_path = 'E:/data/'
 f_scrapy_path = f_root_path + 'scrapy_data/'
 f_content_path = f_root_path + 'content_data/'
 f_stop_words_path = f_root_path + 'aux_data/stop_words.txt'
@@ -33,7 +33,7 @@ stop_words = stop_words_list(f_stop_words_path)
 common_words = common_words_list(f_common_path)
 
 # 按行存储到列表
-f = codecs.open("F:\\github\\MyAll\\xbyz_1500.txt", 'r', encoding='utf-8')
+f = codecs.open("C:\\Users\\91460\\Desktop\\论文相关\\hapi\\MyAll\\xbyz_1500.txt", 'r', encoding='utf-8')
 data = f.readlines()
 train_data = []
 for line in data:
@@ -141,7 +141,7 @@ for line in train_neutral_word_cut:
 print(train_all_word_cut)
 print(train_all_class_list)
 
-f = codecs.open("F:\\github\\MyAll\\xbyz_500.txt", 'r', encoding='utf-8')
+f = codecs.open("C:\\Users\\91460\\Desktop\\论文相关\\hapi\\MyAll\\xbyz_500.txt", 'r', encoding='utf-8')
 data1 = f.readlines()
 test_data = []
 for line in data1:
@@ -291,7 +291,7 @@ class NBayes(object):
             for word in trainset[indx]:
                 tf_tmp[0, self.vocabulary.index(word)] += 1     #统计词频
             for word in trainset[indx]:
-                self.tt[indx, self.vocabulary.index(word)] += 1     # 这句话的这个词++
+                self.tt[indx, self.vocabulary.index(word)] += 1     # 这句话的这个词++/词袋模型
             for singleworld in set(trainset[indx]):
                 self.idf[0, self.vocabulary.index(singleworld)] += 1    # 这个词有这句话++
         self.tf = tf_tmp/self.vacabnum
@@ -329,6 +329,8 @@ class NBayes(object):
 
 
 count = 0
+null_count = 0
+un_null_count = 0
 nb = NBayes()
 pre_class_list = []
 nb.train_set(train_all_word_cut, train_all_class_list)
@@ -340,7 +342,13 @@ for i in range(len(test_all_word_cut)):
     print('bayes_cal:%s' % (nbpredict), '------actual_value:%s' % (value))
     if str(nbpredict) == str(value):
         count += 1
+    if str(nbpredict) == "":
+        null_count += 1
+    if str(nbpredict) != "":
+        un_null_count += 1
 # print (listclass)
 print(pre_class_list)
 
 print('match_rate:', count / len(test_all_word_cut))
+print('match_current_rate:',count/un_null_count)
+print('no_match_rate:',null_count / len(test_all_word_cut))
