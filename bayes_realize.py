@@ -140,7 +140,7 @@ for line in train_neutral_word_cut:
 print(train_all_word_cut)
 print(train_all_class_list)
 
-f = codecs.open("C:\\Users\\91460\\Desktop\\论文相关\\hapi\\MyAll\\f_1.txt", 'r', encoding='utf-8')
+f = codecs.open("C:\\Users\\91460\\Desktop\\论文相关\\hapi\\MyAll\\f_4.txt", 'r', encoding='utf-8')
 data1 = f.readlines()
 test_data = []
 for line in data1:
@@ -282,7 +282,7 @@ class NBayes(object):
             self.pcates[labeltemp] = float(self.labels.count(labeltemp)) / float(len(self.labels))
 
     def calc_wordfreq(self, trainset):
-        self.idf = np.zeros([1, self.vocablen])
+        self.idf = np.ones([1, self.vocablen])
         tftemp = np.zeros([1, self.vocablen])
         self.tf = np.zeros([self.doclength, self.vocablen])
         for indx in range(self.doclength):
@@ -291,7 +291,8 @@ class NBayes(object):
             self.tf[indx] = tftemp/len(trainset[indx])
             for singleworld in set(trainset[indx]):
                 self.idf[0, self.vocabulary.index(singleworld)] += 1    # 这个词有这句话++
-        self.idf = np.log(self.doclength / self.idf + 1)
+        # self.idf = np.log(self.doclength / self.idf + 1)
+        self.idf =np.log(float(self.doclength)) - np.log(self.idf)
         self.tfidf = np.multiply(self.tf,self.idf)
 
     # 计算条件概率 p(x|y_i)
