@@ -6,7 +6,7 @@ import numpy as np
 import re
 from string import digits
 
-f_root_path = 'F:\github\MyAll\data'
+f_root_path = 'F:/github/MyAll/data/'
 f_scrapy_path = f_root_path + 'scrapy_data/'
 f_content_path = f_root_path + 'content_data/'
 f_stop_words_path = f_root_path + 'aux_data/stop_words.txt'
@@ -97,7 +97,8 @@ def word_cut(train_class_list, type):
             if seg != '\r\n' and seg not in stop_words and seg not in common_words:
                 train_word_cut[train_flag].append(seg)
         if len(train_word_cut[train_flag]):
-            print('not null')
+            train_flag += 1
+            continue
         else:
             train_word_cut[train_flag].append(type)
         train_flag += 1

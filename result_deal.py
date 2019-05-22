@@ -3,7 +3,7 @@ import os
 '''
 输入文件名，自动将爬取的文件结果进行整合
 '''
-f_root_path = 'F:\github\MyAll\data'
+f_root_path = 'F:/github/MyAll/data/'
 f_scrapy_path = f_root_path + 'scrapy_data/'
 f_content_path = f_root_path + 'content_data/'
 f_strpwords_path = f_root_path + 'aux_data/stop_words.txt'
