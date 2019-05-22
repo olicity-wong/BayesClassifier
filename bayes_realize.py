@@ -33,7 +33,7 @@ stop_words = stop_words_list(f_stop_words_path)
 common_words = common_words_list(f_common_path)
 
 # 按行存储到列表
-f = codecs.open("C:\\Users\\91460\\Desktop\\论文相关\\hapi\\MyAll\\f_4.txt", 'r', encoding='utf-8')
+f = codecs.open("C:\\Users\\91460\\Desktop\\论文相关\\hapi\\MyAll\\xbyz_1500.txt", 'r', encoding='utf-8')
 data = f.readlines()
 train_data = []
 for line in data:
@@ -45,13 +45,14 @@ train_neutral_class_list = []
 
 # 根据数值判断情感分类
 for line in train_data:
-    if line[0] in ['1']:
+    if line[0] in ['4','5']:
         train_positive_class_list.append(line[1:])
-    if line[0] in ['0']:
+    if line[0] in ['3']:
         train_neutral_class_list.append(line[1:])
-    if line[0] in ['-']:
+    if line[0] in ['1','2']:
         train_negative_class_list.append(line[1:])
-
+    if line[0] in ['0']:
+        continue;
 
 # 分词
 train_positive_word_cut_temp = []
@@ -140,7 +141,7 @@ for line in train_neutral_word_cut:
 print(train_all_word_cut)
 print(train_all_class_list)
 
-f = codecs.open("C:\\Users\\91460\\Desktop\\论文相关\\hapi\\MyAll\\f_4.txt", 'r', encoding='utf-8')
+f = codecs.open("C:\\Users\\91460\\Desktop\\论文相关\\hapi\\MyAll\\xbyz_500.txt", 'r', encoding='utf-8')
 data1 = f.readlines()
 test_data = []
 for line in data1:
@@ -156,13 +157,14 @@ test_neutral_word_cut_temp = []
 test_negative_word_cut_temp = []
 
 for line in test_data:
-    if line[0] in ['1']:
+    if line[0] in ['4','5']:
         test_positive_class_list.append(line[1:])
-    if line[0] in ['0']:
+    if line[0] in ['3']:
         test_neutral_class_list.append(line[1:])
-    if line[0] in ['-']:
+    if line[0] in ['1','2']:
         test_negative_class_list.append(line[1:])
-
+    if line[0] in ['0']:
+        continue;
 
 test_positive_word_cut = []
 test_neutral_word_cut = []
@@ -283,12 +285,11 @@ class NBayes(object):
 
     def calc_wordfreq(self, trainset):
         self.idf = np.ones([1, self.vocablen])
-        tftemp = np.zeros([1, self.vocablen])
         self.tf = np.zeros([self.doclength, self.vocablen])
         for indx in range(self.doclength):
             for word in trainset[indx]:
-                tftemp[0, self.vocabulary.index(word)] += 1     # 这句话的这个词++/词袋模型
-            self.tf[indx] = tftemp/len(trainset[indx])
+                self.tf[indx, self.vocabulary.index(word)] += 1     # 这句话的这个词++/词袋模型
+            self.tf[indx] /= np.sum(self.tf[indx])
             for singleworld in set(trainset[indx]):
                 self.idf[0, self.vocabulary.index(singleworld)] += 1    # 这个词有这句话++
         # self.idf = np.log(self.doclength / self.idf + 1)
