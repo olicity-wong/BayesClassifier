@@ -13,7 +13,8 @@ f_stop_words_path = f_root_path + 'aux_data/stop_words.txt'
 f_words_path = f_root_path + 'words_data/'
 f_words_cut_file = f_words_path + 'word_cut_all/'
 f_common_path = f_words_cut_file + 'xbyz_words_common.txt'
-
+f_positive_path = f_root_path + 'aux_data/positive.txt'
+f_negative_path = f_root_path + 'aux_data/negative.txt'
 
 # 创建停用词列表
 def stop_words_list(filepath):
@@ -25,6 +26,13 @@ def common_words_list(filepath):
     common_words = [line.strip() for line in open(filepath, 'r', encoding='utf-8').readlines()]
     return common_words
 
+def positive_words_list(filepath):
+    positive_words = [line.strip() for line in open(filepath, 'r', encoding='utf-8').readlines()]
+    return positive_words
+
+def negative_words_list(filepath):
+    negative_words = [line.strip() for line in open(filepath, 'r', encoding='utf-8').readlines()]
+    return negative_words
 
 # 去除停用词
 stop_words = stop_words_list(f_stop_words_path)
@@ -32,6 +40,11 @@ stop_words = stop_words_list(f_stop_words_path)
 # 公共词
 common_words = common_words_list(f_common_path)
 
+# positive
+positive_words = positive_words_list(f_positive_path)
+
+# negative
+negative_words = negative_words_list(f_negative_path)
 
 # 数据处理
 def process_data(file_path,type):
@@ -98,8 +111,15 @@ def word_cut(train_class_list, type):
     for line in train_word_cut_temp:
         train_word_cut.append([])
         for seg in line:
-            if seg != '\r\n' and seg not in stop_words and seg not in common_words:
-                train_word_cut[train_flag].append(seg)
+            if type == 'positive':
+                if seg != '\r\n' and seg not in stop_words and seg not in common_words and seg not in negative_words:
+                    train_word_cut[train_flag].append(seg)
+            elif type == 'negative':
+                if seg != '\r\n' and seg not in stop_words and seg not in common_words and seg not in positive_words:
+                    train_word_cut[train_flag].append(seg)
+            else:
+                if seg != '\r\n' and seg not in stop_words and seg not in common_words:
+                    train_word_cut[train_flag].append(seg)
         if len(train_word_cut[train_flag]):
             train_flag += 1
             continue
