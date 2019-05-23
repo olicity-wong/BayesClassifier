@@ -6,7 +6,7 @@ import numpy as np
 import re
 from string import digits
 
-f_root_path = 'F:/github/MyAll/data/'
+f_root_path = 'C:/Users/91460/Desktop/论文相关/hapi/MyAll/data/'
 f_scrapy_path = f_root_path + 'scrapy_data/'
 f_content_path = f_root_path + 'content_data/'
 f_stop_words_path = f_root_path + 'aux_data/stop_words.txt'
@@ -34,7 +34,7 @@ common_words = common_words_list(f_common_path)
 
 
 # 数据处理
-def process_data(file_path):
+def process_data(file_path,type):
     # 按行存储到列表"F:\\github\\MyAll\\xbyz_1500.txt"
     f = codecs.open(file_path, 'r', encoding='utf-8')
     data = f.readlines()
@@ -56,7 +56,9 @@ def process_data(file_path):
             train_negative_class_list.append(line[1:])
         if line[0] in ['0']:
             continue
-
+    if type == "test":
+        global sentences_list
+        sentences_list = train_positive_class_list + train_negative_class_list + train_neutral_class_list
     # 分词
     train_positive_word_cut = word_cut(train_positive_class_list, "positive")
     train_neutral_word_cut = word_cut(train_neutral_class_list, "neutral")
@@ -184,12 +186,14 @@ if __name__ == "__main__":
 
     nb = NBayes()
 
-    train_data_path = "F:\\github\\MyAll\\xbyz_1500.txt"
-    train_all_word_cut, train_all_class_list = process_data(train_data_path)
+    train_data_path = "C:\\Users\\91460\\Desktop\\论文相关\\hapi\\MyAll\\xbyz_1500.txt"
+    train_all_word_cut, train_all_class_list = process_data(train_data_path,"train")
     nb.train(train_all_word_cut, train_all_class_list)
-    test_data_path = "F:\\github\\MyAll\\xbyz_500.txt"
-    test_all_word_cut, test_all_class_list = process_data(test_data_path)
+    test_data_path = "C:\\Users\\91460\\Desktop\\论文相关\\hapi\\MyAll\\xbyz_500.txt"
+    test_all_word_cut, test_all_class_list = process_data(test_data_path,"test")
 
+    save_data_path = "C:\\Users\\91460\\Desktop\\论文相关\\hapi\\MyAll\\xbyz_pre.txt"
+    save_data_file = open(save_data_path, 'a+', encoding='UTF-8')
     count = 0
     null_count = 0
     un_null_count = 0
@@ -207,7 +211,12 @@ if __name__ == "__main__":
             null_count += 1
         if str(nbpredict) != "":
             un_null_count += 1
-    # print (listclass)
+        # 写文件
+        key_value = str(nbpredict) + '\t' + str(sentences_list[i])
+        save_data_file.write(key_value)
+        print(file=save_data_file)
+    save_data_file.close()
+
     print(pre_class_list)
 
     print('correct_rate:', count / len(test_all_word_cut))
