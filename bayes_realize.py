@@ -62,7 +62,9 @@ def process_data(file_path):
     train_neutral_word_cut = word_cut(train_neutral_class_list, "neutral")
     train_negative_word_cut = word_cut(train_negative_class_list, "negative")
 
+    # 所有句子分词集
     train_all_word_cut = train_positive_word_cut + train_negative_word_cut + train_neutral_word_cut
+    # 分类标记集
     train_all_class_list = []
     for line in train_positive_word_cut:
         train_all_class_list.append(2)
