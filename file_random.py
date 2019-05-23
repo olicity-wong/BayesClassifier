@@ -11,11 +11,15 @@ f_content_path = f_root_path + 'content_data/'
 f_strpwords_path = f_root_path + 'aux_data/stop_words.txt'
 f_words_path = f_root_path + 'words_data/'
 f_words_cut_file = f_words_path + 'word_cut_all/'
+f_tt_path = f_root_path + 'tt_data/'
 
 movie = input("电影名：")
+type = input("是否开启优化模式：")   # 0/1
+if type == "1":
+    sentences_num = input("优化数量：")
 read_file = f_content_path + '%s.txt' % (movie)
-write_file1 = f_content_path + '%s_1500.txt' % (movie)
-write_file2 = f_content_path + '%s_500.txt' % (movie)
+write_file1 = f_tt_path + '%s_train.txt' % (movie)
+write_file2 = f_tt_path + '%s_test.txt' % (movie)
 
 f_read = open(read_file, 'r', encoding='UTF-8')
 list_f_read = f_read.readlines()
@@ -63,3 +67,16 @@ for i in list_test:
     count2 = count2 + 1
 f_write2.close()
 print(count2)
+
+if type == "1":
+    f_append = open(write_file1, 'r', encoding='UTF-8')
+    f_write_append = open(write_file2, 'a+', encoding='UTF-8')
+    sentences = f_append.readlines()
+    indx = 0
+    for sentence in sentences:
+        if int(indx) < int(sentences_num):
+            indx += 1
+            f_write_append.write(sentence)
+        else:
+            break
+    f_write_append.close()
