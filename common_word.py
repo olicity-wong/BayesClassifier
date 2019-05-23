@@ -1,17 +1,18 @@
 import os
 
 # 定义文件目录
-f_root_path = 'F:/github/MyAll/data/'
+f_root_path = 'C:/Users/91460/Desktop/论文相关/hapi/MyAll/data/'
 f_scrapy_path = f_root_path + 'scrapy_data/'
 f_content_path = f_root_path + 'content_data/'
 f_strpwords_path = f_root_path + 'aux_data/stop_words.txt'
 f_words_path = f_root_path + 'words_data/'
 f_words_cut_file = f_words_path + 'word_cut_all/'
 
-f_positive_path = f_words_cut_file + 'xbyz_words_positive.txt'
-f_negative_path = f_words_cut_file + 'xbyz_words_negative.txt'
-f_neutral_path = f_words_cut_file + 'xbyz_words_neutral.txt'
-f_common_path = f_words_cut_file + 'xbyz_words_common.txt'
+movie = input("电影名:")
+f_positive_path = f_words_cut_file + '%s_words_positive.txt' % (movie)
+f_negative_path = f_words_cut_file + '%s_words_negative.txt' % (movie)
+f_neutral_path = f_words_cut_file + '%s_words_neutral.txt' % (movie)
+f_common_path = f_words_cut_file + '%s_words_common.txt' % (movie)
 
 f_positive_read = open(f_positive_path, 'r', encoding='UTF-8')
 f_negative_read = open(f_negative_path, 'r', encoding='UTF-8')

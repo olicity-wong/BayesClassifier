@@ -4,7 +4,7 @@ import re
 from string import digits
 
 # 定义文件目录
-f_root_path = 'F:/github/MyAll/data/'
+f_root_path = 'C:/Users/91460/Desktop/论文相关/hapi/MyAll/data/'
 f_scrapy_path = f_root_path + 'scrapy_data/'
 f_content_path = f_root_path + 'content_data/'
 f_strpwords_path = f_root_path + 'aux_data/stop_words.txt'

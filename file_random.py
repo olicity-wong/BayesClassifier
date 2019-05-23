@@ -1,11 +1,21 @@
 import os
 
 # 打乱顺序取1500与500
-import file_random
+import random
 
-read_file = 'F:\\github\\MyAll\\xbyz.txt'
-write_file1 = 'F:\\github\\MyAll\\xbyz_1500.txt'
-write_file2 = 'F:\\github\\MyAll\\xbyz_500.txt'
+
+# 定义文件目录
+f_root_path = 'C:/Users/91460/Desktop/论文相关/hapi/MyAll/data/'
+f_scrapy_path = f_root_path + 'scrapy_data/'
+f_content_path = f_root_path + 'content_data/'
+f_strpwords_path = f_root_path + 'aux_data/stop_words.txt'
+f_words_path = f_root_path + 'words_data/'
+f_words_cut_file = f_words_path + 'word_cut_all/'
+
+movie = input("电影名：")
+read_file = f_content_path + '%s.txt' % (movie)
+write_file1 = f_content_path + '%s_1500.txt' % (movie)
+write_file2 = f_content_path + '%s_500.txt' % (movie)
 
 f_read = open(read_file, 'r', encoding='UTF-8')
 list_f_read = f_read.readlines()
@@ -18,7 +28,7 @@ list_train = []
 #    list_train.append(num)
 # print(len(list_train))
 # print(list_train)
-list_train = file_random.sample(range(0, 2000), 1500)
+list_train = random.sample(range(0, 2000), 1500)
 print(len(list_train))
 print(list_train)
 

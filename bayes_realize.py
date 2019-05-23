@@ -15,6 +15,7 @@ f_words_cut_file = f_words_path + 'word_cut_all/'
 f_common_path = f_words_cut_file + 'xbyz_words_common.txt'
 f_positive_path = f_root_path + 'aux_data/positive.txt'
 f_negative_path = f_root_path + 'aux_data/negative.txt'
+f_pre_path = f_root_path + 'pre_data/'
 
 # 创建停用词列表
 def stop_words_list(filepath):
@@ -203,16 +204,16 @@ class NBayes(object):
 
 
 if __name__ == "__main__":
-
+    movie = input("电影名：")
     nb = NBayes()
 
-    train_data_path = "C:\\Users\\91460\\Desktop\\论文相关\\hapi\\MyAll\\xbyz_1500.txt"
+    train_data_path = f_content_path + '%s_1500.txt' % (movie)
     train_all_word_cut, train_all_class_list = process_data(train_data_path,"train")
     nb.train(train_all_word_cut, train_all_class_list)
-    test_data_path = "C:\\Users\\91460\\Desktop\\论文相关\\hapi\\MyAll\\xbyz_500.txt"
+    test_data_path = f_content_path + '%s_500.txt' % (movie)
     test_all_word_cut, test_all_class_list = process_data(test_data_path,"test")
 
-    save_data_path = "C:\\Users\\91460\\Desktop\\论文相关\\hapi\\MyAll\\xbyz_pre.txt"
+    save_data_path = f_pre_path + '%s_pre.txt' % (movie)
     save_data_file = open(save_data_path, 'a+', encoding='UTF-8')
     count = 0
     null_count = 0
