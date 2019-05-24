@@ -39,9 +39,6 @@ def negative_words_list(filepath):
     return negative_words
 
 
-
-
-
 # 数据处理
 def process_data(file_path, type):
     # 按行存储到列表"F:\\github\\MyAll\\xbyz_1500.txt"
@@ -130,8 +127,8 @@ class NBayes(object):
     def __init__(self):
         self.vocabulary = []  # 词典
         self.idf = 0
-        self.tf = 0  # 训练集的权值矩阵
-        self.tfidf = 0
+        self.tf = 0
+        self.tfidf = 0  # 训练集的权值矩阵
         self.tdm = 0  # p(x|yi)
         self.pcates = {}  # p(yi)类别词典
         self.labels = []  # 对应每个分类的文本
@@ -139,6 +136,7 @@ class NBayes(object):
         self.vocablen = 0  # 词典词长
         self.testset = 0  # 测试集
 
+    # 训练
     def train(self, trainset, classvec):
         self.calc_prob(classvec)  # 计算每个分类在数据集中的概率p(x|yi)
         self.doclength = len(trainset)
@@ -156,6 +154,7 @@ class NBayes(object):
         for labeltemp in labeltemps:
             self.pcates[labeltemp] = float(self.labels.count(labeltemp)) / float(len(self.labels))
 
+    # 计算tf-idf，生成权值矩阵
     def calc_tfidf(self, trainset):
         self.idf = np.ones([1, self.vocablen])
         self.tf = np.zeros([self.doclength, self.vocablen])
@@ -163,8 +162,8 @@ class NBayes(object):
             for word in trainset[indx]:
                 self.tf[indx, self.vocabulary.index(word)] += 1  # 这句话的这个词++/词袋模型
             self.tf[indx] /= np.sum(self.tf[indx])
-            for singleworld in set(trainset[indx]):
-                self.idf[0, self.vocabulary.index(singleworld)] += 1  # 这个词有这句话++
+            for singleword in set(trainset[indx]):
+                self.idf[0, self.vocabulary.index(singleword)] += 1  # 这个词有这句话++
         # self.idf = np.log(self.doclength / self.idf + 1)
         self.idf = np.log(float(self.doclength)) - np.log(self.idf)
         self.tfidf = np.multiply(self.tf, self.idf)
@@ -174,16 +173,18 @@ class NBayes(object):
         self.tdm = np.zeros([len(self.pcates), self.vocablen])  # 类别行*词典列
         sumlist = np.zeros([len(self.pcates), 1])
         for indx in range(self.doclength):
-            self.tdm[self.labels[indx]] += self.tfidf[indx]  # 将同一类别的词向量空间值加总
+            self.tdm[self.labels[indx]] += self.tfidf[indx]  # 将同一类别的词向量空间值加
             sumlist[self.labels[indx]] = np.sum(self.tdm[self.labels[indx]])  # 统计每个分类的总值
         self.tdm = self.tdm / sumlist  # 归一化
 
+    # 映射到当前矩阵
     def map2vocab(self, testdata):
         self.testset = np.zeros([1, self.vocablen])
         for word in testdata:
             if word in self.vocabulary:
                 self.testset[0, self.vocabulary.index(word)] += 1
 
+    # 预测计算
     def predict(self, testset):
         if np.shape(testset)[1] != self.vocablen:
             print('输入错误')
@@ -201,7 +202,7 @@ class NBayes(object):
 if __name__ == "__main__":
     movie = input("电影名：")
     nb = NBayes()
-    f_common_path = f_words_cut_file + '%s_words_common.txt' %(movie)
+    f_common_path = f_words_cut_file + '%s_words_common.txt' % (movie)
 
     # 去除停用词
     global stop_words
