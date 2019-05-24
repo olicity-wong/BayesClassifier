@@ -12,11 +12,11 @@ f_content_path = f_root_path + 'content_data/'
 f_stop_words_path = f_root_path + 'aux_data/stop_words.txt'
 f_words_path = f_root_path + 'words_data/'
 f_words_cut_file = f_words_path + 'word_cut_all/'
-f_common_path = f_words_cut_file + 'xbyz_words_common.txt'
 f_positive_path = f_root_path + 'aux_data/positive.txt'
 f_negative_path = f_root_path + 'aux_data/negative.txt'
 f_pre_path = f_root_path + 'pre_data/'
 f_tt_path = f_root_path + 'tt_data/'
+
 
 # 创建停用词列表
 def stop_words_list(filepath):
@@ -28,28 +28,22 @@ def common_words_list(filepath):
     common_words = [line.strip() for line in open(filepath, 'r', encoding='utf-8').readlines()]
     return common_words
 
+
 def positive_words_list(filepath):
     positive_words = [line.strip() for line in open(filepath, 'r', encoding='utf-8').readlines()]
     return positive_words
+
 
 def negative_words_list(filepath):
     negative_words = [line.strip() for line in open(filepath, 'r', encoding='utf-8').readlines()]
     return negative_words
 
-# 去除停用词
-stop_words = stop_words_list(f_stop_words_path)
 
-# 公共词
-common_words = common_words_list(f_common_path)
 
-# positive
-positive_words = positive_words_list(f_positive_path)
 
-# negative
-negative_words = negative_words_list(f_negative_path)
 
 # 数据处理
-def process_data(file_path,type):
+def process_data(file_path, type):
     # 按行存储到列表"F:\\github\\MyAll\\xbyz_1500.txt"
     f = codecs.open(file_path, 'r', encoding='utf-8')
     data = f.readlines()
@@ -207,12 +201,29 @@ class NBayes(object):
 if __name__ == "__main__":
     movie = input("电影名：")
     nb = NBayes()
+    f_common_path = f_words_cut_file + '%s_words_common.txt' %(movie)
+
+    # 去除停用词
+    global stop_words
+    stop_words = stop_words_list(f_stop_words_path)
+
+    # 公共词
+    global common_words
+    common_words = common_words_list(f_common_path)
+
+    # positive
+    global positive_words
+    positive_words = positive_words_list(f_positive_path)
+
+    # negative
+    global negative_words
+    negative_words = negative_words_list(f_negative_path)
 
     train_data_path = f_tt_path + '%s_train.txt' % (movie)
-    train_all_word_cut, train_all_class_list = process_data(train_data_path,"train")
+    train_all_word_cut, train_all_class_list = process_data(train_data_path, "train")
     nb.train(train_all_word_cut, train_all_class_list)
     test_data_path = f_tt_path + '%s_test.txt' % (movie)
-    test_all_word_cut, test_all_class_list = process_data(test_data_path,"test")
+    test_all_word_cut, test_all_class_list = process_data(test_data_path, "test")
 
     save_data_path = f_pre_path + '%s_pre.txt' % (movie)
     save_data_file = open(save_data_path, 'w+', encoding='UTF-8')
