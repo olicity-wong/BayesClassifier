@@ -11,7 +11,7 @@ import datetime
 import shutil
 
 # 定义文件目录
-f_root_path = 'F:/github/MyAll/data/'
+f_root_path = 'C:/Users/91460/Desktop/论文相关/hapi/MyAll/data/'
 f_scrapy_path = f_root_path + 'scrapy_data/'
 f_content_path = f_root_path + 'content_data/'
 f_strpwords_path = f_root_path + 'aux_data/stop_words.txt'
@@ -181,6 +181,7 @@ if __name__ == "__main__":
     # 地球最后的夜晚：26633257
     # 西虹市首富：27605698
     # 邪不压正：26366496
+    # GreenArrow: 10527257
 
     movie_name = input("电影名：")
 

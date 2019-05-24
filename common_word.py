@@ -17,7 +17,7 @@ f_common_path = f_words_cut_file + '%s_words_common.txt' % (movie)
 f_positive_read = open(f_positive_path, 'r', encoding='UTF-8')
 f_negative_read = open(f_negative_path, 'r', encoding='UTF-8')
 f_neutral_read = open(f_neutral_path, 'r', encoding='UTF-8')
-f_common_read = open(f_common_path, 'a+', encoding='UTF-8')
+f_common_read = open(f_common_path, 'w+', encoding='UTF-8')
 
 words_positive = f_positive_read.readlines()
 words_negative = f_negative_read.readlines()
