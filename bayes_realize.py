@@ -215,7 +215,7 @@ if __name__ == "__main__":
     test_all_word_cut, test_all_class_list = process_data(test_data_path,"test")
 
     save_data_path = f_pre_path + '%s_pre.txt' % (movie)
-    save_data_file = open(save_data_path, 'a+', encoding='UTF-8')
+    save_data_file = open(save_data_path, 'w+', encoding='UTF-8')
     count = 0
     null_count = 0
     un_null_count = 0
