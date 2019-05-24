@@ -39,3 +39,9 @@ allmovie
 correct_rate: 0.7448518332496233
 match_correct_rate: 0.7788865546218487
 no_match_rate: 0.04369663485685585
+
+
+GreenArrow
+correct_rate: 0.7399193548387096
+match_correct_rate: 0.8048245614035088
+no_match_rate: 0.08064516129032258
