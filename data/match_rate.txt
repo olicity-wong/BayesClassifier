@@ -1,0 +1,41 @@
+xhssf
+correct_rate: 0.7016129032258065
+match_correct_rate: 0.7467811158798283
+no_match_rate: 0.06048387096774194
+
+
+
+hldwm
+correct_rate: 0.73
+match_correct_rate: 0.7684210526315789
+no_match_rate: 0.05
+
+
+xbyz
+correct_rate: 0.7203219315895373
+match_correct_rate: 0.7552742616033755
+no_match_rate: 0.04627766599597585
+
+
+fcrs
+correct_rate: 0.6921529175050302
+match_correct_rate: 0.7319148936170212
+no_match_rate: 0.05432595573440644
+
+
+dqzhdyw
+correct_rate: 0.7670682730923695
+match_correct_rate: 0.7941787941787942
+no_match_rate: 0.03413654618473896
+
+
+gldw
+correct_rate: 0.6807228915662651
+match_correct_rate: 0.7167019027484144
+no_match_rate: 0.050200803212851405
+
+
+allmovie
+correct_rate: 0.7448518332496233
+match_correct_rate: 0.7788865546218487
+no_match_rate: 0.04369663485685585
