@@ -16,7 +16,7 @@ correct_rate: 0.7203219315895373
 match_correct_rate: 0.7552742616033755
 no_match_rate: 0.04627766599597585
 
-
+fcrs
 correct_rate: 0.7309236947791165
 match_correct_rate: 0.7583333333333333
 no_match_rate: 0.03614457831325301
@@ -29,9 +29,9 @@ no_match_rate: 0.03413654618473896
 
 
 gldw
-correct_rate: 0.6807228915662651
-match_correct_rate: 0.7167019027484144
-no_match_rate: 0.050200803212851405
+correct_rate: 0.7157258064516129
+match_correct_rate: 0.7585470085470085
+no_match_rate: 0.056451612903225805
 
 
 allmovie
