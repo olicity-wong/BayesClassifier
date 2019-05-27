@@ -17,10 +17,9 @@ match_correct_rate: 0.7552742616033755
 no_match_rate: 0.04627766599597585
 
 
-fcrs
-correct_rate: 0.6921529175050302
-match_correct_rate: 0.7319148936170212
-no_match_rate: 0.05432595573440644
+correct_rate: 0.7309236947791165
+match_correct_rate: 0.7583333333333333
+no_match_rate: 0.03614457831325301
 
 
 dqzhdyw
